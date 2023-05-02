@@ -1,7 +1,7 @@
 require './lib/contexts/account.rb'
 
 describe Account do
-  context ".new/2" do
+  context ".new" do
     it "returns a new instance with account number and balance" do
       acc_number = "1234567812345678"
       bal = 0

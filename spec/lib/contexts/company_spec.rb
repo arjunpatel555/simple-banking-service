@@ -1,7 +1,7 @@
 require './lib/contexts/company.rb'
 
 describe Company do
-  context ".new/2" do
+  context ".new" do
     it "returns new instance of Company" do
       name = "Pizza Hut"
       company = Company.new(name)
@@ -22,22 +22,26 @@ describe Company do
   end
 
   context ".accounts" do
-    it "gets value of accounts" do
+    it "gets accounts" do
       name = "Pizza Hut"
       company = Company.new(name)
 
       expect(company.accounts).to eq([])
     end
+  end
 
-    it "sets value of accounts" do
+  context ".add_account" do
+    it "adds an account" do
       name = "Pizza Hut"
-      init_accounts = [1, 2, 3]
-      new_accounts = [4]
-      company = Company.new(name, init_accounts)
-      expect(company.accounts).to eq(init_accounts)
+      acc_number = "0123456789012345"
+      balance = 100.00
+      company = Company.new(name)
+      expect(company.accounts).to eq([])
 
-      company.accounts = company.accounts + new_accounts
-      expect(company.accounts).to eq([1, 2, 3, 4])
+      company.add_account(acc_number, balance)
+      expect(company.accounts[0]).to be_a(Account)
+      expect(company.accounts[0].account_number).to eq(acc_number)
+      expect(company.accounts[0].balance).to eq(balance)
     end
   end
 end

@@ -1,7 +1,7 @@
 class Company
-  def initialize(name, accounts = [])
+  def initialize(name)
     @name = name
-    @accounts = accounts
+    @accounts = []
   end
 
   def name
@@ -12,7 +12,9 @@ class Company
     @accounts
   end
 
-  def accounts=(accounts)
-    @accounts = accounts
+  def add_account(account_number, balance)
+    new_account = Account.new(account_number, balance)
+    @accounts << new_account
+    new_account
   end
-end
+end 
