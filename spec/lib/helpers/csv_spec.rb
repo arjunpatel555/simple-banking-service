@@ -1,10 +1,10 @@
-require 'csv_reader'
+require './lib/helpers/csv_reader'
 
 include CSV_Reader
 
-TEST_CSV_FILE = "spec/lib/csv_reader.csv"
+TEST_CSV_FILE = "spec/lib/helpers/csv_reader.csv"
 
-describe "read/1" do
+describe ".read" do
   it 'returns nil when arg is not string' do
     expect(CSV_Reader.parse_from_file(nil)).to eq(nil)
   end
