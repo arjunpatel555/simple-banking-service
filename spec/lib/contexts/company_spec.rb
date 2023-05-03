@@ -1,4 +1,5 @@
 require './lib/contexts/company.rb'
+require './lib/contexts/account.rb'
 
 describe Company do
   context ".new" do
@@ -27,6 +28,18 @@ describe Company do
       company = Company.new(name)
 
       expect(company.accounts).to eq([])
+    end
+
+    it "sets accounts" do
+      name = "Pizza Hut"
+      company = Company.new(name)
+
+      expect(company.accounts).to eq([])
+
+      account = Account.new("0123456789012345", 10.0)
+      company.accounts = [account]
+
+      expect(company.accounts).to eq([account])
     end
   end
 
