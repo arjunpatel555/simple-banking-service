@@ -1,10 +1,12 @@
 require './lib/transactions'
 require './lib/contexts/company'
+require './lib/contexts/account'
 
 include Transactions
 
 BALANCES_CSV_DATA = [["1234567812345678", "5000.00"], ["2345678123456789", "50.00"]]
 BALANCES_CSV_FILE = "spec/lib/transactions_balance.csv"
+TRANS_CSV_FILE = "spec/lib/transactions_trans.csv"
 
 describe ".create_accounts_with_balance" do
   it "returns list of Account instances" do
@@ -21,7 +23,7 @@ describe ".create_accounts_with_balance" do
 end
 
 describe ".load_company_balances" do
-  it "returns Company with updated accounts" do
+  it "returns Company with updated accounts, given CSV with account numbers and balances" do
     company = Company.new("Test Company")
 
     expect(company.accounts).to eq([])
@@ -31,5 +33,45 @@ describe ".load_company_balances" do
     expect(company.accounts.any?{ |account| account.account_number == "1111234522226789" && account.balance == 5000.0}).to eq(true)
     expect(company.accounts.any?{ |account| account.account_number == "1111234522221234" && account.balance == 10000.0}).to eq(true)
   end
-
 end
+
+describe ".execute_account_transaction" do
+  it "updates to_account and from_account objects, by given amount" do
+    from_account = Account.new("1111234522221234", 50.0)
+    to_account = Account.new("1111234522226789", 100.0)
+    amount = 25.0
+
+    expect(from_account.balance).to eq(50.0)
+    expect(to_account.balance).to eq(100.0)
+
+    Transactions.execute_account_transaction(from_account, to_account, amount)
+    expect(to_account.balance).to eq(125.0)
+    expect(from_account.balance).to eq(25.0)
+  end
+
+  it "raises an error when the from_account has insufficient balance to transfer amount to to_account" do
+    from_account = Account.new("1111234522221234", 50.0)
+    to_account = Account.new("1111234522226789", 100.0)
+    amount = 100.0
+
+    expect(from_account.balance).to eq(50.0)
+    expect(to_account.balance).to eq(100.0)
+
+    expect{ Transactions.execute_account_transaction(from_account, to_account, amount) }.to raise_error(RuntimeError)
+  end
+end
+
+describe ".process_company_transactions" do
+  it "returns Company with updated accounts, given CSV of transactions to process" do
+    company = Company.new("Test Company")
+    account_1 = Account.new("1111234522226789", 500.0)
+    account_2 = Account.new("1212343433335665", 100.0)
+    company.accounts = [account_1, account_2]
+
+    Transactions.process_company_transactions(company, TRANS_CSV_FILE)
+
+    expect(account_1.balance).to eq(450.0)
+    expect(account_2.balance).to eq(150.0)
+  end
+end
+

@@ -57,4 +57,14 @@ describe Company do
       expect(company.accounts[0].balance).to eq(balance)
     end
   end
+
+  describe ".get_account_by_lookup" do
+    it "returns the Account from Company, given account number lookup" do
+      company = Company.new("Test Company")
+      account = Account.new("1234567812345678", 100.0)
+      company.accounts = [account]
+
+      expect(company.get_account_by_lookup("1234567812345678")).to eq(account)
+    end
+  end
 end

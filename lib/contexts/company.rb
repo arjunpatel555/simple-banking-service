@@ -21,4 +21,8 @@ class Company
     @accounts << new_account
     new_account
   end
+
+  def get_account_by_lookup(account_number)
+    self.accounts.find{ |account| account.account_number == account_number}
+  end
 end 
