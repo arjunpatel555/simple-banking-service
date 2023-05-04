@@ -114,6 +114,11 @@ describe Account do
       expect { account.withdraw("not numeric") }.to raise_error(RuntimeError)
       expect { account.withdraw(-12) }.to raise_error(RuntimeError)
     end
+
+    it "raises an error when the withdraw amount is greater than the balance" do
+       account = create_account()
+       expect { account.withdraw(10000.0) }.to raise_error(RuntimeError)
+    end
   end
 end
 

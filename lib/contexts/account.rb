@@ -26,12 +26,12 @@ class Account
 
   def deposit(amount)
     validate_deposit_amount(amount)
-    @balance + amount
+    @balance += amount
   end
 
   def withdraw(amount)
     validate_withdraw_amount(amount)
-    @balance - amount
+    @balance -= amount
   end
 
   private
@@ -54,6 +54,7 @@ class Account
   def validate_withdraw_amount(amount)
     raise "Withdraw amount must be a numeric" unless (amount.is_a? Numeric)
     raise "Withdraw amount must be greater than zero" unless (amount >= 0)
+    raise "Withdraw amount can not be greater than the balance" unless (amount <= balance)
   end
 
 end
