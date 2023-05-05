@@ -11,6 +11,12 @@ describe Company do
       expect(company.name).to eq(name)
       expect(company.accounts).to eq([])
     end
+
+    it "raises an error when name is invalid value" do
+      name = 1234
+
+      expect { Company.new(name) }.to raise_error(RuntimeError)
+    end
   end
 
   context ".name" do

@@ -1,5 +1,6 @@
 class Company
   def initialize(name)
+    validate_name(name)
     @name = name
     @accounts = []
   end
@@ -24,5 +25,9 @@ class Company
 
   def get_account_by_lookup(account_number)
     self.accounts.find{ |account| account.account_number == account_number}
+  end
+
+  def validate_name(name)
+    raise "Name must be a string" unless (name.is_a? String)
   end
 end 
