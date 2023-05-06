@@ -85,8 +85,6 @@ describe Account do
       account = "1234567812345678"
 
       expect { Account.new(account, "not numeric") }.to raise_error(RuntimeError)
-      # TO.DO:AP - Do something about signed zeroes
-      # expect { Account.new(account, -0) }.to raise_error(RuntimeError)
     end
   end
 

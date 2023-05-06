@@ -62,16 +62,37 @@ describe ".execute_account_transaction" do
 end
 
 describe ".process_company_transactions" do
-  it "returns Company with updated accounts, given CSV of transactions to process" do
+  it "updates Company accounts, given CSV of transactions to process" do
     company = Company.new("Test Company")
     account_1 = Account.new("1111234522226789", 500.0)
     account_2 = Account.new("1212343433335665", 100.0)
     company.accounts = [account_1, account_2]
 
-    Transactions.process_company_transactions(company, TRANS_CSV_FILE)
+    transactions = Transactions.process_company_transactions(company, TRANS_CSV_FILE)
 
+    expect(transactions).to eq({successful_transactions: [["1111234522226789", "1212343433335665", "50.00"]], failed_transactions: []})
     expect(account_1.balance).to eq(450.0)
     expect(account_2.balance).to eq(150.0)
+  end
+
+  it "returns hash with successful transactions" do
+    company = Company.new("Test Company")
+    account_1 = Account.new("1111234522226789", 500.0)
+    account_2 = Account.new("1212343433335665", 100.0)
+    company.accounts = [account_1, account_2]
+
+    transactions = Transactions.process_company_transactions(company, TRANS_CSV_FILE)
+
+    expect(transactions).to eq({successful_transactions: [["1111234522226789", "1212343433335665", "50.00"]], failed_transactions: []})
+  end
+
+  it "returns hash with failed transactions" do
+    company = Company.new("Test Company")
+    company.accounts = []
+
+    transactions = Transactions.process_company_transactions(company, TRANS_CSV_FILE)
+
+    expect(transactions).to eq({successful_transactions: [], failed_transactions: [["1111234522226789", "1212343433335665", "50.00"]]})
   end
 end
 

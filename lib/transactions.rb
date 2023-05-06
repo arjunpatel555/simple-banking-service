@@ -17,16 +17,26 @@ module Transactions
 
   def process_company_transactions(company, csv_file)
     transaction_data = CSV_Reader.parse_from_file(csv_file)
+    successful_transactions = []
+    failed_transactions = []
 
     transaction_data.map{ |row| 
-      from_account_number = row[0]
-      to_account_number = row[1]
-      amount = row[2].to_f
-      accounts = get_accounts_for_transaction(company, from_account_number, to_account_number)
-      execute_account_transaction(accounts[:from_account], accounts[:to_account], amount)
+      begin
+        from_account_number = row[0]
+        to_account_number = row[1]
+        amount = row[2].to_f
+        accounts = get_accounts_for_transaction(company, from_account_number, to_account_number)
+        execute_account_transaction(accounts[:from_account], accounts[:to_account], amount)
+        successful_transactions.push(row)
+      rescue 
+        failed_transactions.push(row)
+      end
     }
 
-    company
+    {
+      successful_transactions: successful_transactions,
+      failed_transactions: failed_transactions
+    }
   end
 
   def execute_account_transaction(from_account, to_account, amount)
